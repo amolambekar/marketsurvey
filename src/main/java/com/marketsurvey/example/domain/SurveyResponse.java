@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -32,18 +33,18 @@ public class SurveyResponse implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long surveyResponseId;
 	
-	@JsonIgnore
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name="surveyId")
 	private Survey survey;
 	
-	@JsonIgnore
+	
 	@ManyToOne
 	 @JoinColumn(name = "respondentId")
 	private Respondent respondentId;
 	
 	
-	@OneToMany(mappedBy="responseId.surveyResponse",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="responseId.surveyResponse",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private Set<Response> responses = new HashSet<>();
 
 	@Override
@@ -63,7 +64,9 @@ public class SurveyResponse implements Serializable {
 
 	@PrePersist
 	public void prePersist(){
+		
 		for(Response response:responses){
+			System.out.println(" is response.getResponsed  empty &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   "+response.getResponseId());
 			response.getResponseId().setSurveyResponse(this);
 		}
 		

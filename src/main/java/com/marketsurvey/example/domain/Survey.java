@@ -41,7 +41,7 @@ public class Survey implements Serializable{
 	private Set<Question> questions = new HashSet<>();
 	
 	
-	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL,fetch=FetchType.LAZY) 
+	@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL,fetch=FetchType.EAGER) 
 	private Set<SurveyResponse> surveyResponses = new HashSet<>();
 	
 
@@ -61,7 +61,7 @@ public class Survey implements Serializable{
 	}
 	
 	@PrePersist
-	public void prePersist(){
+	public void prePersist(){ 
 		if(surveyResponses!=null && !surveyResponses.isEmpty())
 		for( SurveyResponse surveyResponse:surveyResponses){
 			

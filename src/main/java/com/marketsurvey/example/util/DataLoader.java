@@ -1,6 +1,7 @@
 package com.marketsurvey.example.util;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 import com.marketsurvey.example.domain.Option;
 import com.marketsurvey.example.domain.Question;
 import com.marketsurvey.example.domain.Respondent;
+import com.marketsurvey.example.domain.Response;
+import com.marketsurvey.example.domain.ResponseId;
 import com.marketsurvey.example.domain.Survey;
 import com.marketsurvey.example.domain.SurveyResponse;
 import com.marketsurvey.example.repository.RespondentRepository;
@@ -17,6 +20,8 @@ import com.marketsurvey.example.repository.SurveyRepository;
 
 @Component
 public class DataLoader implements ApplicationRunner {
+	
+	
 
     private SurveyRepository surveyRepository;
 	private RespondentRepository respondentRepository;
@@ -30,8 +35,7 @@ public class DataLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) {
     	Survey survey = new Survey("productSurvey",null,null);
         
-       	SurveyResponse surveyResponse = new SurveyResponse();
-       	surveyResponse.setSurvey(survey);
+       
     	//surveyRepository.save(new User("lala", "lala", "lala"));
     	HashSet<Question> questionSet = new HashSet<>();
     	Question question1 = new Question("what is your first reaction to the product",null); 
@@ -101,9 +105,39 @@ public class DataLoader implements ApplicationRunner {
     	questionSet.add(question4);
         survey.setQuestions(questionSet);
        	Respondent respondent = new Respondent();
-       	respondent.setName("John");
+    	respondent.setName("John");
     	respondentRepository.save(respondent);
-        	surveyRepository.save(survey);
+    	SurveyResponse surveyResponse = new SurveyResponse();
+       	surveyResponse.setSurvey(survey);
+       	surveyResponse.setRespondentId(respondent);
+       	Set<Response> responses= new HashSet<>();
        	
+       	Response response = new Response();
+       	ResponseId responseId = new ResponseId( surveyResponse, question1,option1);
+       	response.setResponseId(responseId );
+       	responses.add(response);
+       	
+    	Response response1 = new Response();
+       	ResponseId responseId1 = new ResponseId( surveyResponse, question4,option4);
+       	response1.setResponseId(responseId1 );
+       	responses.add(response1);
+       	
+    	Response response2 = new Response();
+       	ResponseId responseId2 = new ResponseId( surveyResponse, question2,option2);
+       	response2.setResponseId(responseId2 );
+        responses.add(response2);
+        	
+    	Response response3 = new Response();
+       	ResponseId responseId3 = new ResponseId( surveyResponse, question3,option3);
+       	response3.setResponseId(responseId3 );
+       	responses.add(response3);
+       	
+		surveyResponse.setResponses(responses);
+		Set<SurveyResponse> surveyResponses = new HashSet<>();
+		surveyResponses.add(surveyResponse);
+		survey.setSurveyResponses(surveyResponses);
+    	
+        	surveyRepository.save(survey);
+        	 
     }
 }

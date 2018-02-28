@@ -23,9 +23,9 @@ public class SurveyRepositoryTest {
 	
 	 @Test
 	 public void createSurveywithQuestions() throws Exception{
-	   String content = "{\"name\": \"ProductSurvey\", \"questions\": [\"http://localhost:8080/questions/3\",\"http://localhost:8080/questions/4\"]}";
-	     mockMvc.perform(MockMvcRequestBuilders.post("/surveys").contentType(MediaType.APPLICATION_JSON).content(content).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
-	     
+	   String content = "{\"name\": \"ProductSurvey\", \"questions\": [\"/questions/3\",\"/questions/4\"]}";
+	     mockMvc.perform(MockMvcRequestBuilders.post("/surveys").contentType(MediaType.APPLICATION_JSON).content(content)).andExpect(status().isCreated());
+	    System.out.println("The survey is +++++++++ " + mockMvc.perform(MockMvcRequestBuilders.get("/surveys/1").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString());
 	 }
 	 
 	 /*@Test
